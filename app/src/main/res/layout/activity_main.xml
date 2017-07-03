@@ -14,25 +14,7 @@
         />
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
-        android:layout_height="200px"
+        android:layout_height="match_parent"
         android:id="@+id/vp"
         ></android.support.v4.view.ViewPager>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="向下弹出"
-        android:onClick="down"
-        />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="向上弹出"
-        android:onClick="up"
-        />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="向右弹出"
-        android:onClick="right"
-        />
 </LinearLayout>

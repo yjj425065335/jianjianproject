@@ -1,8 +1,8 @@
+package com.lnb.jianjianproject.utils;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-
-import com.lnb.jianjianproject.utils.TimeUtils;
 
 import java.util.ArrayList;
 

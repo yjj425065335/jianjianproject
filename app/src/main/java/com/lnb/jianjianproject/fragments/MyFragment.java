@@ -33,7 +33,7 @@ public class MyFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-        TextView textView=view.findViewById(R.id.tv);
+        TextView textView= (TextView) view.findViewById(R.id.tv);
         LogUtil.e(TAG,mPage);
         if(!TextUtils.isEmpty(mPage))
         textView.setText("数据"+mPage);
